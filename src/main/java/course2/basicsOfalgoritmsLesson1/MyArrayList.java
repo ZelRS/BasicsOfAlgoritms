@@ -1,6 +1,7 @@
 package course2.basicsOfalgoritmsLesson1;
 
 import course2.basicsOfalgoritmsLesson1.exceptions.InvalidIndexException;
+import course2.basicsOfalgoritmsLesson1.exceptions.NullItemException;
 import course2.basicsOfalgoritmsLesson1.exceptions.NullListException;
 import course2.basicsOfalgoritmsLesson1.exceptions.StringNotFoundException;
 
@@ -20,6 +21,7 @@ public class MyArrayList implements StringList {
     // в качестве результата выполнения.
     @Override
     public String add(String item) {
+        validateItem(item);
         if (mainIndex < arr.length) {
             arr[mainIndex] = item;
         } else {
@@ -41,6 +43,7 @@ public class MyArrayList implements StringList {
     // в качестве результата выполнения.
     @Override
     public String add(int index, String item) {
+        validateItem(item);
         if (index < arr.length && index >= 0) {
             String[] newArr = new String[arr.length + 1];
             for (int i = 0; i < newArr.length; i++) {
@@ -69,6 +72,7 @@ public class MyArrayList implements StringList {
     // или выходит за пределы массива.
     @Override
     public String set(int index, String item) {
+        validateItem(item);
         if (index < arr.length && index >= 0) {
             arr[index] = item;
             return item;
@@ -83,6 +87,7 @@ public class MyArrayList implements StringList {
     // элемент отсутствует в списке.
     @Override
     public String remove(String item) {
+        validateItem(item);
         int size = arr.length;
         for (String s : arr) {
             if (s.equals(item)) {
@@ -136,6 +141,7 @@ public class MyArrayList implements StringList {
     // Вернуть true/false;
     @Override
     public boolean contains(String item) {
+        validateItem(item);
         for (String s : arr) {
             if (s.equals(item)) {
                 return true;
@@ -149,6 +155,7 @@ public class MyArrayList implements StringList {
     // или -1 в случае отсутствия.
     @Override
     public int indexOf(String item) {
+        validateItem(item);
         for (int i = 0; i < arr.length; i++) {
             if (arr[i].equals(item)) {
                 return i;
@@ -162,6 +169,7 @@ public class MyArrayList implements StringList {
     // или -1 в случае отсутствия.
     @Override
     public int lastIndexOf(String item) {
+        validateItem(item);
         for (int i = arr.length - 1; i >= 0; i--) {
             if (arr[i].equals(item)) {
                 return i;
@@ -231,5 +239,11 @@ public class MyArrayList implements StringList {
         String[] newArr = new String[arr.length];
         System.arraycopy(arr, 0, newArr, 0, arr.length);
         return newArr;
+    }
+
+    private void validateItem(String item) {
+        if (item == null) {
+            throw new NullItemException("Элемент не может быть равен null");
+        }
     }
 }
