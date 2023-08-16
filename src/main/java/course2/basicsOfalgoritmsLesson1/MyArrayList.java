@@ -44,7 +44,7 @@ public class MyArrayList implements StringList {
     @Override
     public String add(int index, String item) {
         validateItem(item);
-        if (index < arr.length && index >= 0) {
+        validateIndex(index);
             String[] newArr = new String[arr.length + 1];
             for (int i = 0; i < newArr.length; i++) {
                 if (i < index) {
@@ -57,9 +57,6 @@ public class MyArrayList implements StringList {
             }
             arr = newArr;
             mainIndex = newArr.length;
-        } else {
-            throw new InvalidIndexException("Задан некорректный индекс");
-        }
         return item;
     }
 
@@ -73,12 +70,9 @@ public class MyArrayList implements StringList {
     @Override
     public String set(int index, String item) {
         validateItem(item);
-        if (index < arr.length && index >= 0) {
+        validateIndex(index);
             arr[index] = item;
             return item;
-        } else {
-            throw new InvalidIndexException("Задан некорректный индекс");
-        }
     }
 
     // Удаление элемента.
@@ -115,9 +109,7 @@ public class MyArrayList implements StringList {
     // элемент отсутствует в списке.
     @Override
     public String remove(int index) {
-        if (index >= arr.length || index < 0) {
-            throw new InvalidIndexException("Задан некорректный индекс");
-        }
+        validateIndex(index);
         int size = arr.length;
         for (int i = 0; i < arr.length; i++) {
             if (i == index) {
@@ -184,11 +176,8 @@ public class MyArrayList implements StringList {
     // количества элементов.
     @Override
     public String get(int index) {
-        if (index < arr.length && index >= 0) {
+        validateIndex(index);
             return arr[index];
-        } else {
-            throw new InvalidIndexException("Задан некорректный индекс");
-        }
     }
 
     // Сравнить текущий список с другим.
@@ -244,6 +233,12 @@ public class MyArrayList implements StringList {
     private void validateItem(String item) {
         if (item == null) {
             throw new NullItemException("Элемент не может быть равен null");
+        }
+    }
+
+    private void validateIndex(int index) {
+        if (index >= arr.length || index < 0) {
+            throw new InvalidIndexException("Задан некорректный индекс");
         }
     }
 }
