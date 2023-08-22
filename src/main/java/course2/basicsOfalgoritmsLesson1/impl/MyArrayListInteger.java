@@ -6,16 +6,17 @@ import course2.basicsOfalgoritmsLesson1.exceptions.NullItemException;
 import course2.basicsOfalgoritmsLesson1.exceptions.NullListException;
 import course2.basicsOfalgoritmsLesson1.exceptions.StringNotFoundException;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import static java.util.Arrays.asList;
 
 public class MyArrayListInteger implements IntegerList {
-    private Integer[] arr;
+    private Integer[] array;
     private int mainIndex;
 
     public MyArrayListInteger() {
-        this.arr = new Integer[0];
+        this.array = new Integer[0];
         this.mainIndex = 0;
     }
 
@@ -25,13 +26,13 @@ public class MyArrayListInteger implements IntegerList {
     @Override
     public Integer add(Integer item) {
         validateItem(item);
-        if (mainIndex < arr.length) {
-            arr[mainIndex] = item;
+        if (mainIndex < array.length) {
+            array[mainIndex] = item;
         } else {
-            Integer[] newArr = new Integer[arr.length + 1];
-            System.arraycopy(arr, 0, newArr, 0, arr.length);
+            Integer[] newArr = new Integer[array.length + 1];
+            System.arraycopy(array, 0, newArr, 0, array.length);
             newArr[mainIndex] = item;
-            arr = newArr;
+            array = newArr;
         }
         mainIndex++;
         return item;
@@ -48,17 +49,17 @@ public class MyArrayListInteger implements IntegerList {
     public Integer add(int index, Integer item) {
         validateItem(item);
         validateIndex(index);
-        Integer[] newArr = new Integer[arr.length + 1];
+        Integer[] newArr = new Integer[array.length + 1];
         for (int i = 0; i < newArr.length; i++) {
             if (i < index) {
-                newArr[i] = arr[i];
+                newArr[i] = array[i];
             } else if (i == index) {
                 newArr[i] = item;
             } else {
-                newArr[i] = arr[i - 1];
+                newArr[i] = array[i - 1];
             }
         }
-        arr = newArr;
+        array = newArr;
         mainIndex = newArr.length;
         return item;
     }
@@ -74,7 +75,7 @@ public class MyArrayListInteger implements IntegerList {
     public Integer set(int index, Integer item) {
         validateItem(item);
         validateIndex(index);
-        arr[index] = item;
+        array[index] = item;
         return item;
     }
 
@@ -85,24 +86,24 @@ public class MyArrayListInteger implements IntegerList {
     @Override
     public Integer remove(Integer item) {
         validateItem(item);
-        int size = arr.length;
-        for (Integer s : arr) {
+        int size = array.length;
+        for (Integer s : array) {
             if (s.equals(item)) {
                 size--;
             }
         }
         Integer[] newArr = new Integer[size];
         int newIndex = 0;
-        for (Integer s : arr) {
+        for (Integer s : array) {
             if (!s.equals(item)) {
                 newArr[newIndex] = s;
                 newIndex++;
             }
         }
-        if (!asList(arr).contains(item)) {
+        if (!asList(array).contains(item)) {
             throw new StringNotFoundException("Такой строки нет в списке");
         }
-        arr = newArr;
+        array = newArr;
         return item;
     }
 
@@ -113,8 +114,8 @@ public class MyArrayListInteger implements IntegerList {
     @Override
     public Integer remove(int index) {
         validateIndex(index);
-        int size = arr.length;
-        for (int i = 0; i < arr.length; i++) {
+        int size = array.length;
+        for (int i = 0; i < array.length; i++) {
             if (i == index) {
                 size--;
             }
@@ -122,14 +123,14 @@ public class MyArrayListInteger implements IntegerList {
         Integer[] newArr = new Integer[size];
 
         int newIndex = 0;
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             if (i != index) {
-                newArr[newIndex] = arr[i];
+                newArr[newIndex] = array[i];
                 newIndex++;
             }
         }
-        arr = newArr;
-        return arr[index];
+        array = newArr;
+        return array[index];
     }
 
     // Проверка на существование элемента.
@@ -137,7 +138,7 @@ public class MyArrayListInteger implements IntegerList {
     @Override
     public boolean contains(Integer item) {
         validateItem(item);
-        sortSelection();
+        sort(array);
         return binarySearch(item);
     }
 
@@ -148,8 +149,8 @@ public class MyArrayListInteger implements IntegerList {
     @Override
     public int indexOf(Integer item) {
         validateItem(item);
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i].equals(item)) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(item)) {
                 return i;
             }
         }
@@ -162,8 +163,8 @@ public class MyArrayListInteger implements IntegerList {
     @Override
     public int lastIndexOf(Integer item) {
         validateItem(item);
-        for (int i = arr.length - 1; i >= 0; i--) {
-            if (arr[i].equals(item)) {
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (array[i].equals(item)) {
                 return i;
             }
         }
@@ -177,7 +178,7 @@ public class MyArrayListInteger implements IntegerList {
     @Override
     public Integer get(int index) {
         validateIndex(index);
-        return arr[index];
+        return array[index];
     }
 
     // Сравнить текущий список с другим.
@@ -202,7 +203,7 @@ public class MyArrayListInteger implements IntegerList {
     // Вернуть фактическое количество элементов.
     @Override
     public int size() {
-        return arr.length;
+        return array.length;
     }
 
     // Вернуть true,
@@ -210,13 +211,13 @@ public class MyArrayListInteger implements IntegerList {
     // иначе false.
     @Override
     public boolean isEmpty() {
-        return arr.length == 0;
+        return array.length == 0;
     }
 
     // Удалить все элементы из списка.
     @Override
     public void clear() {
-        arr = new Integer[0];
+        array = new Integer[0];
     }
 
     // Создать новый массив
@@ -224,8 +225,8 @@ public class MyArrayListInteger implements IntegerList {
     // и вернуть его.
     @Override
     public Integer[] toArray() {
-        Integer[] newArr = new Integer[arr.length];
-        System.arraycopy(arr, 0, newArr, 0, arr.length);
+        Integer[] newArr = new Integer[array.length];
+        System.arraycopy(array, 0, newArr, 0, array.length);
         return newArr;
     }
 
@@ -234,9 +235,9 @@ public class MyArrayListInteger implements IntegerList {
     // и вернуть его.
     @Override
     public Integer[] toSortedArray() {
-        sortSelection();
-        Integer[] newArr = new Integer[arr.length];
-        System.arraycopy(arr, 0, newArr, 0, arr.length);
+        sort(array);
+        Integer[] newArr = new Integer[array.length];
+        System.arraycopy(array, 0, newArr, 0, array.length);
         return newArr;
     }
 
@@ -249,39 +250,67 @@ public class MyArrayListInteger implements IntegerList {
 
     // проверка индекса на корректность
     private void validateIndex(int index) {
-        if (index >= arr.length || index < 0) {
+        if (index >= array.length || index < 0) {
             throw new InvalidIndexException("Задан некорректный индекс");
         }
     }
 
     // выбрана сотрировка выбором, тк при проверке скорость выполнения она показала самый быстрый результат
-    private void sortSelection() {
-        for (int i = 0; i < arr.length - 1; i++) {
-            for (int j = 0; j < arr.length - 1 - i; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    Integer tmp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = tmp;
-                }
+    private void sort(Integer[] arr) {
+        quickSort(arr, 0, arr.length - 1);
+    }
+
+    private void quickSort(Integer[] array, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(array, begin, end);
+
+            quickSort(array, begin, partitionIndex - 1);
+            quickSort(array, partitionIndex + 1, end);
+        }
+    }
+
+    private int partition(Integer[] array, int begin, int end) {
+        int pivot = array[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (array[j] <= pivot) {
+                i++;
+
+                swapElements(array, i, j);
             }
         }
+
+        swapElements(array, i + 1, end);
+        return i + 1;
+    }
+
+    private void swapElements(Integer[] array, int i1, int i2) {
+        int temp = array[i1];
+        array[i1] = array[i2];
+        array[i2] = temp;
     }
 
     //приватный метод для бинарного поиска элемента
     private boolean binarySearch(Integer item) {
         int min = 0;
-        int max = arr.length - 1;
+        int max = array.length - 1;
         while (min <= max) {
             int mid = (min + max) / 2;
-            if (Objects.equals(item, arr[mid])) {
+            if (Objects.equals(item, array[mid])) {
                 return true;
             }
-            if (item < arr[mid]) {
+            if (item < array[mid]) {
                 max = mid - 1;
             } else {
                 min = mid + 1;
             }
         }
         return false;
+    }
+
+    //приватный метод для расширения массива в 1,5 раза
+    private void grow() {
+        array = Arrays.copyOf(array, mainIndex + mainIndex / 2);
     }
 }
